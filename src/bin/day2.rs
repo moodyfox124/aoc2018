@@ -40,7 +40,7 @@ impl Scanner {
     fn find_duplicate(data: &str, letter_diffference: usize) -> Option<String> {
         let mut character_lines: Vec<Vec<char>> = Vec::new();
         let mut result: Option<String> = None;
-        let mut diff_index: Option<char> = None;
+        let mut diff_index: Option<_> = None;
         for line in data.lines() {
             let chars: Vec<char> = line.chars().collect();
             let is_any = character_lines.iter().any(|c| {
@@ -49,15 +49,16 @@ impl Scanner {
                     let char_at_index = chars.get(index).expect("missing char at index");
                     if *char_at_index != *v {
                         diff -= 1;
-                        diff_index = Some(*v);
+                        diff_index = Some(index);
                     }
 
                     if diff < 0 {
                         return false;
                     }
                 }
-                let remove_char = diff_index.expect("Should have char");
-                result = Some(c.into_iter().filter(|&&v| v != remove_char).collect());
+                let mut new_result = c.clone();
+                new_result.remove(diff_index.unwrap());
+                result = Some(new_result.iter().collect());
 
                 return true;
             });
@@ -66,7 +67,7 @@ impl Scanner {
             }
             character_lines.push(chars);
         }
-        return result;
+        return Some(format!("** no answer found **"));
     }
 }
 
