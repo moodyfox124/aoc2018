@@ -37,9 +37,9 @@ impl Scanner {
         return doubles * triples;
     }
 
-    fn find_duplicate(data: &str, letter_diffference: usize) -> String {
+    fn find_duplicate(data: &str, letter_diffference: usize) -> Option<String> {
         let mut character_lines: Vec<Vec<char>> = Vec::new();
-        let mut result: String = String::new();
+        let mut result: Option<String> = None;
         let mut diff_index: Option<char> = None;
         for line in data.lines() {
             let chars: Vec<char> = line.chars().collect();
@@ -57,7 +57,7 @@ impl Scanner {
                     }
                 }
                 let remove_char = diff_index.expect("Should have char");
-                result = c.into_iter().filter(|&&v| v != remove_char).collect();
+                result = Some(c.into_iter().filter(|&&v| v != remove_char).collect());
 
                 return true;
             });
@@ -75,5 +75,5 @@ fn main() {
         .expect("Unable to open file with data");
     println!("Checksum {}", Scanner::calculate_checksum(&data));
 
-    println!("Similar string {}", Scanner::find_duplicate(&data, 1));
+    println!("Similar string {:?}", Scanner::find_duplicate(&data, 1));
 }
